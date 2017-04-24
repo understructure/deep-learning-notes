@@ -64,7 +64,7 @@ To do this, calculate partial derivative w.r.t. our values (b and m)
 
 A simple trask for this course
 
-Hyperparameters - high-level tuning paramaters of the network, helps determine:
+Hyperparameters - high-level tuning parameters of the network, helps determine:
 
 - how fast model runs
 - # of hidden layers
@@ -74,7 +74,7 @@ Random Search
 
 - pick a range, let it randomly sample from uniform distribution of those values
 
-Initialize weights - from nomral distribution w/ low deviation (values pretty close together)
+Initialize weights - from normal distribution w/ low deviation (values pretty close together)
 values from -1.0 to 1.0
 
 
@@ -83,9 +83,9 @@ apply weight values to input data - dot product (two matrixes multiplyed)
 
 functions to check out (probably all in numpy):
 
-`nonlin
-np.dot # dot product of two matrixes
-np.exp # exponent?`
+`nonlin  
+np.dot # dot product of two matrixes  
+np.exp # exponent?`  
 
 
 check error - how far off is this from actual value?
@@ -109,10 +109,10 @@ Multiply the L2 Delta values by transpose of its associated weight matrix to get
 
 Lastly, we'll update the weight matrixes for each associated layer by multiplying them by their respective delta
 
-1. Deep learning uses:
-	- Linear Algebra
-	- Statistics, and
-	- Calculus
+1. Deep learning uses:  
+	- Linear Algebra  
+	- Statistics, and  
+	- Calculus  
 2. A Neural Net performs a series of operations on an input tensor to make a prediction
 3. We can optimize a prediction using gradient descent to backpropogate errors and updating weights accordingly
 
