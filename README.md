@@ -67,8 +67,8 @@ A simple trask for this course
 Hyperparameters - high-level tuning parameters of the network, helps determine:
 
 - how fast model runs
-- # of hidden layers
-- # of neurons
+- number of hidden layers
+- number of neurons
 
 Random Search
 
