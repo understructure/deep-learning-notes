@@ -178,4 +178,20 @@ Gradient is another term for rate of change or slope
 [Avoiding a local minimum - momentum](http://sebastianruder.com/optimizing-gradient-descent/index.html#momentum)
 
 
+New weights in gradient descent are old weights plus change in weight / weight step
+Weight step is proportional to the gradient - the partial derivative of the error w.r.t. each weight (wi)
+We can add an arbitrary scaling parameter that allows us to set the size of the gradient descent steps, called the learning rate - Greek letter Eta (looks like an n)
+Calculating gradient here requires multivariable calculus (which makes sense because we're taking partial derivatives)
+Writing out the gradient, you get the partial derivative w.r.t. the weights of the squared error
+Network output (y-hat) is a function of the weights
+What we have here is a function of another function that depends on the weights
+This requires using the chain rule to calculate the derivative
+See Unit 11 video, ~4:45 for explanation of chain rule
 
+So, change in weights is the learning rate multiplied by the error term multiplied by x
+
+
+#### Making a column vector
+You see above that sometimes you'll want a column vector, even though by default Numpy arrays work like row vectors. 
+It's possible to get the transpose of an array like so `arr.T`, but for a 1D array, the transpose will return a row vector. 
+Instead, use `arr[:,None]` to create a column vector (where arr is the name of the array).
