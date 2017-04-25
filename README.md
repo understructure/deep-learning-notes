@@ -117,4 +117,65 @@ Lastly, we'll update the weight matrixes for each associated layer by multiplyin
 3. We can optimize a prediction using gradient descent to backpropogate errors and updating weights accordingly
 
 
+### lesson 7
+
+Number of columns in left matrix must equal number of rows in right matrix
+End up with number of rows in left matrix and number of columns in right matrix (kind of backwards)
+
+e.g., 2x3 matrix and a 3x2 matrix - the *inner* values must be the same (here, 3 and 3)
+end up with a matrix of the *outer* dimensions (here, 2 and 2)
+
+#### Important Reminders About Matrix Multiplication  
+
+
+* The number of columns in the left matrix must equal the number of rows in the right matrix.
+* The answer matrix always has the same number of rows as the left matrix and the same number of columns as the right matrix.
+* Order matters. Multiplying A•B is not the same as multiplying B•A.
+* Data in the left matrix should be arranged as rows., while data in the right matrix should be arranged as columns.
+
+np.matmul # matrix multiplication function
+np.dot # results are same as np.matmul *if both matrixes are two-dimensional!!*
+
+Transposing matrixes
+
+* If data is stored as rows in *both* matrixes, this should be OK
+* If data is stored as columns in both, it won't work correctly - it will combine elements from every data item rather than combining data from elements of related items
+
+## Lesson 8
+
+Logistic Regression - Log Loss function - minimize error function using gradient descent
+Neural Network - like logistic regression with multiple lines, sort of
+
+Some Activation Functions:
+
+* logistic (often called the sigmoid)
+* tanh
+* softmax
+
+
+Example - Sigmoid function
+
+```import numpy as np
+import math
+
+def sigmoid(x):
+    # TODO: Implement sigmoid function
+    return 1 / (1 + np.exp(-x))
+
+inputs = np.array([0.7, -0.3])
+weights = np.array([0.1, 0.8])
+bias = -0.1
+
+# TODO: Calculate the output
+output = sigmoid(np.matmul(inputs, weights) + bias)
+
+print('Output:')
+print(output)```
+
+
+Gradient is another term for rate of change or slope
+[Khan Academy Videos](https://www.khanacademy.org/math/multivariable-calculus/multivariable-derivatives/gradient-and-directional-derivatives/v/gradient)
+[Avoiding a local minimum - momentum](http://sebastianruder.com/optimizing-gradient-descent/index.html#momentum)
+
+
 
