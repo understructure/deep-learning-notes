@@ -2,7 +2,7 @@
 
 import urllib.request
 import pandas as pd
-
+import numpy as np
 
 
 column_names = ["CRIM", "ZN", "INDUS", "CHAS", "NOX", "RM", "AGE", "DIS", "RAD", "TAX", "PTRATIO", "B", "LSTAT", "MEDV"]
@@ -58,10 +58,12 @@ def main():
     massaged = [x.strip() for x in raw.strip().split("\n")]
     
     # pd.read_table(massaged)
+       
+    float_list = [list(map(np.float32, x.split(" "))) for x in massaged]
+
+    df = pd.DataFrame(float_list, columns=column_names, dtype=np.float32)
     
-    
-    df = pd.DataFrame([x.split(" ") for x in massaged], columns=column_names)
-    # df.save_pickle()
+    # df = pd.DataFrame([x.split(" ") for x in massaged], columns=column_names)
     
     df.to_pickle("boston.pickle")
     
