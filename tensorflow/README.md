@@ -4,9 +4,9 @@ NOTE:  These are the very minimal steps to get things going, they don't necessar
 
 
 
-1.  Define model parameters - `tf.Variable` objects - things you want TensorFlow to figure out for you - e.g., a weights matrix and a bias vector.
+1.  Define model parameters - `tf.Variable` objects - things you want TensorFlow to figure out for you - e.g., a weights matrix `W` and a bias vector `b`.
 2.  Define model placeholders - `tf.placeholder` objects - things you'll be feeding in, e.g., X and Y values for training, and X values for validation and testing.
-3.  Define your model - for example, a linear model of `y = m * x + b`.
+3.  Define your model - for example, a linear model of `y = W * x + b`.
 4.  Define your loss function - for regression, you might use mean squared error (MSE), for categorization, it's considered best practices to use cross entropy.
 5.  Define your optimizer - e.g., GradientDescentOptimizer for gradient descent.  It's **critical** to use a good learning rate, too small and your model will never converge, too large and your weights and biases will blow up.
 6.  Tell the optimizer what to do, e.g., `optimizer.minimize(loss)` to minimize the loss function.  This is commonly called `train` in the code.
