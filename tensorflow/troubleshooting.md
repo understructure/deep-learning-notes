@@ -19,7 +19,7 @@ a = tf.placeholder(tf.int16, name="AAA2")
 # This will throw an error:
 sess.run(opz, {a: 10, b:20})```
 </pre>
-The fix is to redefine the operation `opz` to point to the new a object:
+The fix is to redefine the operation `opz` to point to the new `a` object:
 <pre>
 opz = a * b
 sess.run(opz, {a: 10, b:20})
