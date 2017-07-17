@@ -6,7 +6,6 @@ Note:  These are mostly taken from the [Python API Documentation](https://www.te
 
 | Object                          | Notes                                     |
 |---------------------------------|-----------------------------------------------------------| 
-
 | `tf.Variable`    | What you want TF to figure out, e.g., weights and biases |
 | `tf.constant`    | Immutable, per the name |
 | `tf.Placeholder` | What you'll be feeding into the model, e.g., X and Y, can leave the first size parameter as `None` if you may change the batch size with each iteration |
