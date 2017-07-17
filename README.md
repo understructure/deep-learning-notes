@@ -14,7 +14,9 @@ These are my notes on Deep Learning.  It's a work in progress, so it might look 
 * [TensorBoard: Graph Visualization](https://www.tensorflow.org/get_started/graph_viz) note:  this is *really* where you should start with this stuff when you try to put it into practice
 * [Hands-On TensorBoard (TensorFlow Dev Summit 2017)](https://www.youtube.com/watch?v=eBbEDRsCmv4&t=16s)
 * [TensorBoard: Visualizing Learning](https://www.tensorflow.org/get_started/summaries_and_tensorboard)
-
+* [Effective TensorFlow for Non-Experts (Google I/O '17)](https://www.youtube.com/watch?v=5DknTFbcGVM)
+* [TensorFlow High-Level APIs: Models In A Box](https://www.youtube.com/watch?v=t64ortpgS-E)
+  * [Supporting Code](https://gist.github.com/martinwicke/6838c23abdc53e6bcda36ed9f40cff39)
 
 
 ### Convolutional Neural Networks
