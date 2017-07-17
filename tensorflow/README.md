@@ -8,7 +8,7 @@ NOTE:  These are the very minimal steps to get things going, they don't necessar
 2.  Define model placeholders - `tf.placeholder` objects - things you'll be feeding in, e.g., X and Y values for training, and X values for validation and testing.
 3.  Define your model - for example, a linear model of `y = W * x + b`.
 4.  Define your loss function - for regression, you might use mean squared error (MSE), for categorization, it's considered best practices to use cross entropy.
-5.  Define your optimizer - e.g., GradientDescentOptimizer for gradient descent.  It's **critical** to use a good learning rate, too small and your model will never converge, too large and your weights and biases will blow up.
+5.  Define your optimizer - e.g., GradientDescentOptimizer (`tf.train.GradientDescentOptimizer()`) for gradient descent.  It's **critical** to use a good learning rate, too small and your model will never converge, too large and your weights and biases will blow up.
 6.  Tell the optimizer what to do, e.g., `optimizer.minimize(loss)` to minimize the loss function.  This is commonly called `train` in the code.
 7.  Define your training data - when working with a Pandas DataFrame, turn your X values into a numpy array.  You may need to reshape your Y values to (-1, N), where N is the number of training cases.
 8.  Create and run a TensorFlow Session() object, passing in the global variables initializer function.
