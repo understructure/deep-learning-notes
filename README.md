@@ -7,7 +7,8 @@ These are my notes on Deep Learning.  It's a work in progress, so it might look 
 
 ### TensorFlow
 
-[Getting Started With TensorFlow](https://www.tensorflow.org/get_started/get_started)
+* [Getting Started With TensorFlow](https://www.tensorflow.org/get_started/get_started)
+[My notes on a Coursera specialization on Google Cloud Platform and serverless TensorFlow](https://github.com/understructure/deep-learning-notes/blob/master/TensorFlow-on-GCP.md)
 
 ### TensorBoard
 
