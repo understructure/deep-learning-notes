@@ -1,9 +1,5 @@
 
-## TensorFlow on Google Cloud Platform
 
-These are notes from a Coursera specialization on serverless TensorFlow.  If you know almost nothing about 
-deep learning or TF, it might be worth it, but I found it to be fairly basic.  I learned a few things, but overall,
-I probably should have just read the documentation or Ian Goodfellow's book or something.
 
 ```
 %bash
@@ -434,5 +430,87 @@ p = beam.Pipeline(argv=sys.argv)
 * If you scale predicted value going into the model, make sure to unscale it after you get your predicted value
 
 
+#### Multi-class Neural Networks
 
+* "one vs. one method" - you can create binary combinations for each combination of classes, but you'd get (n * (n - 1)) / 2 combinations, so a four-class problem would produce (4 * 3) / 2 = 6 models
+	* this is inefficient and doesn't scale
+* "one vs. all" or "one vs. rest" - output a vector with probabilties for each class
+* Softmax - `tf.nn.softmax_cross_entropy_with_logits_v2()`
+* For multiclass multilabel outputs - `tf.nn.sigmoid_cross_entropy_with_logits()`
+* Approximate versions of Softmax exist - generally used during training but full Softmax used during inference for better accuracy
+* To do this, change default partition strategy from `mod` to `div`
+	* Candidate sampling - calculates for all the positive labels, but only for a random sample of negatives - `tf.nn.sampled_softmax_loss()`
+		* Number of negatives is important hyperparameter
+		* More intuitive - doesn't require a really good model
+	* Noise-contrastive - approximates the denominator of Softmax by modeling the distribution of outputs - `tf.nn.nce_loss()`
+		* Denominator of Softmax = sum of exponentials of logits
+		* Requires a really good model as it relies on modeling the distribution of the outputs
+* For our classification output, if we have both mutually exclusive labels and probabilities, we should use `tf.nn.softmax_cross_entropy_with_logits_v2()`. If the labels are mutually exclusive, but the probabilities aren’t, we should use `tf.nn.sparse_softmax_cross_entropy_with_logits()`. If our labels aren’t mutually exclusive, we should use `tf.nn.sigmoid_cross_entropy_with_logits()`.
 
+#### Embeddings
+
+* Think of families of models - embeddings in one model can be used to jumpstart embeddings in another model in the same family
+* Embeddings - think of these like good, reusable software libraries
+* Remember feature cross of hour of day and day of week for traffic predicitons.  Instead of one-hot encoding this, we could pass it to a dense layer, and then train the model to predict traffic as before.
+	* Embeddings are weighted sum of feature cross values, weights learned from the data
+	* Embedding learns how to embed the feature cross in lower-dimensional space (e.g., from 168-dimensional to only 2 real-valued numbers) using `tf.feature_column.embedding_column()`
+		* `day_hour_embedding = tf.feature_column.embedding_column(day_hour_categorical_column, 2)`
+	* Works with any categorical column, not just a feature cross
+	* Can load checkpoint tensor from a checkpoint directory to jumpstart traffic model for another city, for example
+* Transfer learning of embeddings from similar ML models (e.g., to predict TV viewership from traffic patterns - same latent factor)
+	* First layer - the feature cross
+	* Second layer - Mystery box labeled latent factor
+	* Third layer - the embedding
+	* Fourth layer
+		* One side: image of traffic
+		* Second side: Image of people watching TV
+* Transfer learning might work on seemingly very different problems as long as they share the same latent factors
+* Embeddings are useful for any categorical column
+* Think of matrix of users and movies for Netflix - sparse ratings
+	* We could organize by dimension of age appropriateness...
+	* If we add a second dimension, e.g., gross ticket sales, it gives us more freedom in organizing movies by similarity
+	* Adding more dimensions adds more distinctions, but overfitting can happen of course with too many
+* If we originally had 500,000 movies, we go from a 500,000 dimensional space to a two-dimensional space, or D-dimensional, where D is the number of features used to represent a movie
+* With 500,000 movies, you have to create 500,000 input nodes as one-hot encoded, - BAD IDEA
+	* Dense representation is inefficient for storage and compute (takes up a ton of memory to do matrix math on such large matrices)
+	* Dense tensor - anything where we store all the values for an input tensor - has nothing to do with the actual data in the tensor, just about how we're storing it
+	* Store as sparse tensors, do matrix multiplication directly on sparse tensors
+		* Build a dictionary mapping from each feature to an integer (e.g., each movie gets an integer) - for each user, just store the integers representing the movies the user has seen - this creates an efficient, sparse representation
+		* `tf.feature_column.categorical_column_with_vocabulary_list()`, `tf.feature_column.categorical_column_with_identity()`, and `tf.feature_column.categorical_column_with_hash_bucket()` all store info as sparse vectors
+* How does this really work?
+* Embeddings are feature columns that function like layers - really no different than any other hidden layer
+* Think of embeddings as a handy adapter that allows the network to incorporate sparse or categorical data well
+* Can do this with regression, categorization, or ranking problem
+* If a word is being represented by a three-dimensional embedding, each of the three nodes (in the embedding) can be considered as a dimension into which words are being projected. 
+	* Edge weights between a movie and a hidden layer are the coordinate values in this lower dimensional projection.
+* Think of MNIST - 28x28 images, 784 pixels - we only save the pixels with nonzero values (e.g., with part of the written digit), represent as sparse matrix
+* Pass this to 3-dimensional embedding - these three numbers represent values of all pixels "turned on" in the image
+	* This is what we're looking at in TensorBoard's "projections" tab, e.g., for T-SNE visualization
+	* true for categorical variables, natural language text, and raw bitmaps - all of these are sparse
+	* You'll see the clustering like in MNIST T-SNE projector if you have enough data and your model gets good accuracy
+* When we use a linear or DNN classifier, output is a single logit if you only have one output / target class
+* With MNIST, 10 labels (0-9) so 1 logit for each of the possible digits, logit layer
+* If you use audio data, take embeddings of clips and compute Euclidian distance, that's a measure of similarity between songs
+* Can also use embedding vectors as inputs to a clustering algorithm
+* Can jointly embed diverse features - e.g., two different languages, text and corresponding audio
+* Number of embeddings is hyperparameter - higher number can more accurately represent the relationship b/t input values, but more embeddings makes a larger model and slower training
+* Good rule is to start with the fourth root of the total number of possible values, so for 500,000 movies, square root is about 700, square root of that is about 26, so start around 25 maybe
+* 15-35 is rule of thumb, but not firm
+
+* How to mix Keras and the Estimator API?  - once you have a compiled Keras model, you can get an Estimator.
+	* `from tensorflow import keras`
+	* `model = Sequential()`
+	* ...
+	* `estimator = keras.estimator.model_to_estimator(keras_model=model)`
+
+* Then remove `model.fit()` and `model.evaulate()` from before, then use the new `estimator` as you did before, with training input function, train spec, eval spec, exporter, etc. and pass them into `train_and_evaluate()` function - this is how you productionize a Keras model
+* Note: Linkage b/t input function and Keras model is through a naming convention
+	* If you have a Keras layer named 'XYZ', you should have a feature named 'XYZ_input' returned in the features dict that comes out of your `train_input_fn()`
+* https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/35179.pdf
+* https://arxiv.org/abs/1712.00409
+* Invest in data collection, augmentation, and enrichment, then top off with hyperparameter tuning
+* http://colah.github.io/posts/2015-08-Understanding-LSTMs/ for the theory
+* https://www.tensorflow.org/tutorials/recurrent for explanations
+* https://github.com/tensorflow/models/tree/master/tutorials/rnn/ptb for sample code
+* `tf.stack()` - creates a matrix from a list of lists - e.g. for time series / RNN data sets
+* For this demo, he's using MSE as loss fx, SGD as optimizer
